@@ -1,11 +1,14 @@
+// Importing necessary modules and components
 import Head from 'next/head';
 import Layout from '../components/layout/layout';
 
+// Global CSS styles
 import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }) {
   return (
     <Layout>
+      {/* Sets up the document head with title and meta information */}
       <Head>
         <title>DataArt Winter IT Camp 2025</title>
         <meta
