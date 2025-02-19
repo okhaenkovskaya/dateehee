@@ -3,36 +3,43 @@ import Loader from '@/components/common/loader';
 import {getData, sendData, deleteData} from '@/services/joke';
 
 function HomePage() {
-  const [joke, setJoke] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [joke, setJoke] = useState(null);// State to store the joke
+  const [isLoading, setIsLoading] = useState(false); // State to track loading status
 
+  // Fetches an initial joke when the component mounts
   useEffect(() => {
     getData().then(data => setJoke(data));
   },[]);
 
+  // Fetches a new joke and ensures it's different from the current one
   const getNewJoke = () => {
     setIsLoading(true);
 
     getData().then(data => {
       if (data.id !== joke.id) {
         setJoke(data)
-      } else getNewJoke();
+      } else getNewJoke(); // Recursively fetch a new joke if it's the same as the current one
     }).finally(() => setIsLoading(false));
   };
 
+  // Deletes the current joke and fetches a new one
   const deleteJoke = () => {
     setIsLoading(true);
 
     deleteData(joke.id).then(() => getNewJoke()).finally(() => setIsLoading(false));
   };
 
+  // Update voting for a joke option
   async function updateHandler(e, label) {
     e.preventDefault();
 
     setIsLoading(true);
+
+    // Updates the votes array, incrementing the selected option
     const updatedVotes = joke.votes.map(vote => {
       return vote.label === label ? {value: vote.value + 1, label: vote.label} : vote;
     });
+
     const updatedJoke = {
       id: joke.id,
       question: joke.question,
