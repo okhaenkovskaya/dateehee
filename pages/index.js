@@ -1,13 +1,34 @@
 import {useEffect, useState} from 'react';
 import Loader from '@/components/common/loader';
-import {getData} from '@/services/joke';
+import {getData, sendData} from '@/services/joke';
 
 function HomePage() {
   const [joke, setJoke] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     getData().then(data => setJoke(data));
   },[]);
+
+  async function updateHandler(e, label) {
+    e.preventDefault();
+
+    setIsLoading(true);
+    const updatedVotes = joke.votes.map(vote => {
+      return vote.label === label ? {value: vote.value + 1, label: vote.label} : vote;
+    });
+    const updatedJoke = {
+      id: joke.id,
+      question: joke.question,
+      answer: joke.answer,
+      votes: updatedVotes,
+      availableVotes: joke.availableVotes,
+    };
+    await sendData(updatedJoke)
+      .then(() => setJoke(updatedJoke))
+      .catch(error => console.log(error))
+      .finally(() => setIsLoading(false));
+  }
 
   return (
     <div className="p-5 min-h-screen flex items-center justify-center bg-indigo-400 text-3xl">
@@ -25,6 +46,7 @@ function HomePage() {
                 {joke.votes.map(vote => (
                   <li key={vote.label} className="m-4">
                     <button type="button"
+                            disabled={isLoading}
                             onClick={(e) => updateHandler(e, vote.label)}>
                       {vote.label}
                       <span className="ml-2">{vote.value}</span>

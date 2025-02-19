@@ -28,6 +28,23 @@ async function handler(req, res) {
       .status(201)
       .json({ message: 'Successfully downloaded joke!' });
   }
+
+  if (req.method === 'POST') {
+    await db.collection('jokes').updateOne(
+      { id: req.body.id },
+      { $set: req.body },
+    ).catch ((error) => {
+      client.close();
+
+      return res.status(500).json({ message: error });
+    });
+
+    await client.close();
+
+    res
+      .status(200)
+      .json({ message: 'Successfully updated counter on button!' });
+  }
 }
 
 export default handler;
