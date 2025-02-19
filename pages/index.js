@@ -10,6 +10,16 @@ function HomePage() {
     getData().then(data => setJoke(data));
   },[]);
 
+  const getNewJoke = () => {
+    setIsLoading(true);
+
+    getData().then(data => {
+      if (data.id !== joke.id) {
+        setJoke(data)
+      } else getNewJoke();
+    }).finally(() => setIsLoading(false));
+  };
+
   async function updateHandler(e, label) {
     e.preventDefault();
 
@@ -37,7 +47,7 @@ function HomePage() {
             <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight md:text-5xl lg:text-6xl">
               {joke.question}
             </h1>
-            <p className="mb-6 text-lg font-normal lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">
+            <p className="mb-6 text-lg font-normal lg:text-xl sm:px-16 xl:px-48">
               {joke.answer}
             </p>
 
@@ -59,8 +69,9 @@ function HomePage() {
             <div className="inline-flex">
               <button
                 type="button"
+                onClick={getNewJoke}
                 className="inline-flex items-center justify-center px-5 py-3 mx-1 text-base font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
-                Next Joke
+                {isLoading ? <Loader size={6} /> : 'Next Joke'}
               </button>
             </div>
           </>
