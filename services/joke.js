@@ -30,3 +30,19 @@ export async function sendData(info) {
     throw new Error(data.message || 'Something went wrong!');
   }
 }
+
+export async function deleteData(id) {
+  const response = await fetch('/api/joke', {
+    method: 'DELETE',
+    body: JSON.stringify(id),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Something went wrong!');
+  }
+}

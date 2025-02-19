@@ -45,6 +45,22 @@ async function handler(req, res) {
       .status(200)
       .json({ message: 'Successfully updated counter on button!' });
   }
+
+  if (req.method === 'DELETE') {
+    await db.collection('jokes').deleteOne(
+      { id: req.body }
+    ).catch ((error) => {
+      client.close();
+
+      return res.status(500).json({ message: error });
+    });
+
+    await client.close();
+
+    res
+      .status(200)
+      .json({ message: 'Joke deleted successfully!' });
+  }
 }
 
 export default handler;
