@@ -14,7 +14,7 @@ function MainNavigation() {
           <li className='ml-3'>
             <Link
               className='p-1'
-              href='#'>GIT</Link>
+              href='https://github.com/okhaenkovskaya/dateehee'>GIT</Link>
           </li>
         </ul>
       </nav>
